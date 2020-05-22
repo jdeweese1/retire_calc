@@ -1,5 +1,7 @@
 import os
 from datetime import datetime
+from typing import Union, AnyStr
+from pathlib import Path
 
 import yaml
 
@@ -64,3 +66,8 @@ class Config:
     @property
     def retirement_year(self):
         return self.birth_year + self.retirement_age
+
+    @classmethod
+    def write_default_config(cls, filepath:Union[AnyStr, Path]):
+        with open(filepath, 'w') as f_write:
+            f_write.write(yaml.dump(cls.default_config))
