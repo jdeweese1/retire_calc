@@ -1,6 +1,9 @@
 import locale
+from argparse import ArgumentParser
+
 from config import Config
-from finance_models import (compound_interest, get_savings_through_retirement, tvm_factor)
+from finance_models import (compound_interest, get_savings_through_retirement,
+                            tvm_factor)
 
 locale.setlocale(locale.LC_ALL, 'en_US')
 
@@ -46,5 +49,15 @@ def run_retirement_simulation():
     for item in get_savings_through_retirement(savings_beginning_retirement=money_saved_at_end_of_career, cfg=cfg):
         print(
             f'At age {item.age} money in bank will be {to_currency(item.savings)} which is {round(item.pct_of_original, 2)}% of original')
+
+
+parser = ArgumentParser()
+parser.add_argument('--config-file', type=str)
+parser.add_argument('--write-default-config-to', help='Writes a sample config file for the retirement calculator to the specified file.')
 if __name__ == '__main__':
-    run_retirement_simulation()
+    args = parser.parse_args()
+    print(args)
+    if args.write_default_config_to:
+        Config.write_default_config(filepath=args.write_default_config_to)
+    else:
+        run_retirement_simulation()
