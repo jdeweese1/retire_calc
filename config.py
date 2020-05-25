@@ -1,21 +1,22 @@
 import os
+from argparse import Namespace
 from datetime import datetime
-from typing import Union, AnyStr
 from pathlib import Path
+from typing import AnyStr, Union
 
 import yaml
 
 
 class Config:
     default_config = {
-        'birth_year': 2000,
+        'birth_year': 1999,
         'life_span': 100,
         'retirement_age': 65,
-        'cur_yearly_salary': 50000,
+        'cur_yearly_salary': 50000.0,
         'yearly_salary_increase_pct': .01,
         'yearly_investment_return_during_career': .07,
         'yearly_investment_return_during_retirement': .045,
-        'upfront_investment': 0,
+        'upfront_investment': 0.0,
         'yearly_retirement_contribution_ratio': .15,
     }
 
@@ -44,6 +45,14 @@ class Config:
             self.upfront_investment = Config.default_config['upfront_investment']
             self.yearly_retirement_contribution_ratio = Config.default_config['yearly_retirement_contribution_ratio']
 
+    def overwrite_with_cli_args(self, cli_args: Union[Namespace]):
+        for k in self.default_config:
+            if hasattr(self, k) and hasattr(cli_args, k):
+                cli_arg_val = getattr(cli_args, k)
+                if cli_arg_val != None:
+                    type1 = type(getattr(self, k))
+                    setattr(self, k, type1(cli_arg_val))
+
     @property
     def years_alive_post_retirement(self):
         return self.life_span - self.retirement_age
@@ -68,6 +77,6 @@ class Config:
         return self.birth_year + self.retirement_age
 
     @classmethod
-    def write_default_config(cls, filepath:Union[AnyStr, Path]):
+    def write_default_config(cls, filepath: Union[AnyStr, Path]):
         with open(filepath, 'w') as f_write:
             f_write.write(yaml.dump(cls.default_config))

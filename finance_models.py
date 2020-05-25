@@ -20,7 +20,7 @@ def get_savings_through_retirement(savings_beginning_retirement, cfg: Config) ->
 
 
 # https://stackoverflow.com/a/21544322
-def compound_interest(p: int, rate: float, years: int, periods_per_year=4, annual_addition: Union[int, Iterable[int]] = 0) -> float:
+def compound_interest(p: int, rate: float, years: int, periods_per_year: int = 4, annual_addition: Union[int, Iterable[int]] = 0) -> float:
     """
 
     Calculates compound interest, roughly according to the formula 𝐴=𝑃(1+𝑟/𝑛)**(𝑛𝑡)
