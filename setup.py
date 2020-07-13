@@ -7,5 +7,6 @@ setup(
     version='20.7.1',
     url='https://github.com/jdeweese1/retire_calc',
     author='Jarod DeWeese',
+    py_modules=['finance_models'],
     keywords=['retirement', 'model']
     )
