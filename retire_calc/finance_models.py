@@ -57,7 +57,9 @@ def compound_interest(p: int, rate: float, years: int, periods_per_year: int = 4
     monthly_contribution_iter = iter(
         next(contribution_per_period_gen) * (1 + r_div_n) ** i for i in range(0, nt))
     with_annual_addition = sum(monthly_contribution_iter)
-    return base_wo_annual_addition + with_annual_addition
+    rtn_val = base_wo_annual_addition + with_annual_addition
+    print(f'{years} {rtn_val}')
+    return rtn_val
 
 
 def tvm_factor(r, years, periods_per_year):
