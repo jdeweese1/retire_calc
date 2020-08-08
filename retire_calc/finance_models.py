@@ -3,9 +3,7 @@ import locale
 from argparse import Namespace
 from collections import namedtuple
 from typing import Iterable, Union
-
-from config import Config
-
+from retire_calc import Config
 
 def get_savings_through_retirement(savings_beginning_retirement, cfg: Config) -> None:
     stipend = cfg.yearly_retirement_stipend
