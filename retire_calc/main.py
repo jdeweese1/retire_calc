@@ -1,7 +1,7 @@
 import locale
 from argparse import ArgumentParser
 
-from config import Config
+from retire_calc import Config
 from finance_models import (run_retirement_simulation)
 
 am_locale = locale.getlocale()
@@ -25,4 +25,9 @@ if __name__ == '__main__':
     if args.write_default_config_to:
         Config.write_default_config(filepath=args.write_default_config_to)
     else:
-        run_retirement_simulation(args)
+        cfg = Config()
+        if args.config_file:
+            cfg = Config.from_yaml(args.config_file)
+
+        cfg.overwrite_with_cli_args(args)
+        run_retirement_simulation(cfg)

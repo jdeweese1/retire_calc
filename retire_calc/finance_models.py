@@ -56,7 +56,6 @@ def compound_interest(p: int, rate: float, years: int, periods_per_year: int = 4
         next(contribution_per_period_gen) * (1 + r_div_n) ** i for i in range(0, nt))
     with_annual_addition = sum(monthly_contribution_iter)
     rtn_val = base_wo_annual_addition + with_annual_addition
-    print(f'{years} {rtn_val}')
     return rtn_val
 
 
@@ -68,11 +67,9 @@ def to_currency(n: int):
     return locale.currency(n, grouping=True)
 
 
-def run_retirement_simulation(parsed_args: Union[None, Namespace]):
-    cfg = Config()
-    cfg.overwrite_with_cli_args(parsed_args)  # If parsed_args is populated, it holds the cli args, which should supersede those read in by the Config constructor
-    print(
-        f'Config\nRetiring at : {cfg.retirement_age}\nyearly salary to be {to_currency(cfg.cur_yearly_salary)}\nannual contribution {to_currency(cfg.yearly_retirement_contribution_ratio)}')
+def run_retirement_simulation(cfg: Union[Config]):
+    print(cfg)
+    print(f'Note that this simulation assumes no inflation, as well as that yould only plan to have retirement income of {Config.RETIREMENT_REDUCED_COST_FACTOR *100}% of what you begin your career with cur_yearly_salary={cfg.cur_yearly_salary}')
     print('\n')
 
     print(
@@ -92,14 +89,14 @@ def run_retirement_simulation(parsed_args: Union[None, Namespace]):
                 rate=cfg.yearly_investment_return_during_career,
                 years=cfg.years_until_retirement,
                 periods_per_year=4,
-                annual_addition=cfg.get_yearly_retirement_contribution_gen()))} with annual addition of {cfg.yearly_retirement_contribution_ratio} for {cfg.years_until_retirement} years, so total money put in would be''')
+                annual_addition=cfg.get_yearly_retirement_contribution_gen()))} with annual addition of {cfg.yearly_retirement_contribution_ratio *100}% of income for {cfg.years_until_retirement} years, so total money put in would be''')
     counter = range(0, cfg.years_until_retirement)
     g = cfg.get_yearly_retirement_contribution_gen()
     cost_basis_saved = 0
     for _ in counter:
         cost_basis_saved += next(g)
 
-    print(f'''{to_currency(cost_basis_saved)} + init of {cfg.upfront_investment}''')
+    print(f'''{to_currency(cost_basis_saved)} + init of {cfg.upfront_investment} and the rest is interest''')
 
     print(
         f'If you entered retirement with {to_currency(money_saved_at_end_of_career)}')
